@@ -1,0 +1,4 @@
+# 这是一些学习ggplot的笔记，个人整理一下，以便查看复习  
+安装与加载ggplot2包
+install.packages(ggplot2)
+library(ggplot2)
