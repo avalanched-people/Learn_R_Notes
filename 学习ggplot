@@ -2,3 +2,14 @@
 安装与加载ggplot2包
 install.packages(ggplot2)
 library(ggplot2)
+
+ggplot函数的基本语法结构：
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point()
+在ggplot中，放在aes()中表示其中的数据需要经过美学映射，放在aes外面则不需要,比如：
+ggplot(data = mpg, aes(x = displ, y = hwy), colour = "red")) +
+  geom_point()
+和
+ggplot(data = mpg, aes(x = disp, y = hwy, colour = "red")) + 
+  geom_point()
+这两者是不一样的
