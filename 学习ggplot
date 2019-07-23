@@ -16,25 +16,9 @@ ggplot(data = mpg, aes(x = disp, y = hwy, colour = "red")) +
 # 在aes()函数外，则会直接绘制红色的点图
 # 这一点需要牢记
 
-# 关于ggplot2中的工具箱介绍
-# 1. 几本的绘图种类
-# geom_point() 点图
-# geom_area() 区域图
-# geom_bar() 条形图
-# geom_line() 和 geom_path() 线图
-# geom_rect()、geom_tilt() 和 geom_raster() 矩形图
 
-# 下面介绍
-df <- data.frame(x = c(3, 1, 5),
-                 y = c(2, 4, 6),
-                 label = c("a", "b", "c")
-                 )
-p <- ggplot(df, aes(x, y, label = label) +
-  labs(x = NULL, y = NULL) # 隐藏坐标轴名称
-p + geom_point() + ggtile("point")
-p + geom_text() + ggtile("text")
-p + geom_bar(stat = "identity") + ggtile("bar")
-p + geom_tile() + ggtile("raster")
+
+
 
 
 
