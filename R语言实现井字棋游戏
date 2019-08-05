@@ -168,3 +168,6 @@ main <- function(){
       }else{
         cat("游戏结束")
       }
+    }
+  }
+}
