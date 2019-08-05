@@ -1,0 +1,170 @@
+# 井字棋游戏
+# 具体玩法为在一个3x3的棋盘上，一个玩家用X做棋子，
+# 另一个玩家用O做棋子，谁先在棋盘上的一行、一列或对角线上画满三个
+# 棋子，即可获胜，如果棋盘下满无人胜出，即为平局。
+
+main <- function(){
+  # 打印棋盘
+  drawBoard <- function(board){
+    cat("\n")
+    cat("\t\t\t┌─┬─┬─┐", sep = "\n")
+    cat("\t\t\t|", board[7], "|", board[8], "|", board[9], "|", sep = "")
+    cat("\n")
+    cat('\t\t\t├─┼─┼─┤', sep = "\n")
+    cat("\t\t\t|", board[4], "|", board[5], "|", board[6], "|", sep = "")
+    cat("\n")
+    cat('\t\t\t├─┼─┼─┤', sep = "\n")
+    cat("\t\t\t|", board[1], "|", board[2], "|", board[3], "|", sep = "")
+    cat("\n")
+    cat('\t\t\t└─┴─┴─┘')
+    cat("\n")
+  }
+  
+  # 选择先下的人的标准: 1. 随机选择 2. 自主选择
+  # 先下的人选子, 那么后下的人就
+  # 自动分配到另一种
+  playLetter <- function(){
+    # 选择标准
+    model <- readline("请选择决定先下的人的标准(1-Random/2-Self)：")
+    while ((model != "1" ) & (model != "2")){
+      cat("选择错误，请重新选择!")
+      cat("\n")
+      model <- readline("请选择决定先下的人的标准(1-Random/2-Self)：")
+    }
+    
+    if (model == "1"){
+      if (sample(0:1, 1) == 0){
+        cat("张莹先下", "\n")
+        first <- "张莹"
+      }else{
+        cat("徐亮先下", sep = "\n")
+        first <- "徐亮"
+      }
+    }else if (model == "2"){
+      number <- readline("请输入先下的人的名字(1-张莹/2-徐亮)：")
+      while ((number != "1") & (number != "2")){
+        cat("选择错误，请重新选择!")
+        cat("\n")
+        number <- readline("请输入先下的人的名字(1-张莹/2-徐亮)：")
+      }
+      first <- ifelse(number == "1", "张莹", "徐亮")
+    }
+    cat(sprintf("请%s选子('1-X/2-O'):", first))
+    number1 <- readline()
+    while (number1 != "1" & number1 != "2"){
+      cat("选择错误，请重新选择!")
+      cat("\n")
+      number1 <- readline()
+    }
+    letter <- ifelse(number1 == "1", "X", "O")
+    return(c(first, letter))
+   }
+  
+  
+  # 再玩一次
+  playAgain <- function(){
+    cat("还要再玩一次吗？(yes/no)", sep = "\n")
+    begin1 <- (tolower(readline()))
+    while ((begin1 != "yes") & (begin1 != "no")){
+      cat("输入错误，请重新输入!", sep = "\n")
+      begin1 <- (tolower(readline()))
+    }
+    begin1
+  }
+  
+  
+  # 判断位置是否已经被占
+  isSpaceFree <- function(move){
+    if (board[move] != " "){
+      FALSE
+    }else{
+      TRUE
+    }
+  }
+  
+  # 判断位置是否存在
+  isSpaceExist <- function(move){
+    if ((move > 9) | (move < 0)){
+      FALSE
+    }else{
+      TRUE
+    }
+  }
+  
+  
+  # 判断是否获胜
+  # bo是此轮落子之后的棋盘
+  # le是此轮落子的类别
+  # 获胜的类别共有8种
+  isWin <- function(bo, le){
+    return ((bo[7] == le & bo[8] == le & bo[9] == le) |
+            (bo[4] == le & bo[5] == le & bo[6] == le) |
+            (bo[1] == le & bo[2] == le & bo[3] == le) |
+            (bo[7] == le & bo[4] == le & bo[1] == le) |
+            (bo[8] == le & bo[5] == le & bo[2] == le) |
+            (bo[9] == le & bo[6] == le & bo[3] == le) |
+            (bo[7] == le & bo[5] == le & bo[3] == le) |
+            (bo[9] == le & bo[5] == le & bo[1] == le))
+  }
+  
+  
+  # 初始化board
+  board <- vector("character", length = 9L)
+  board[1:9] <- " "
+  
+  
+  # 设定一个标志begin，用来判断游戏是否进行
+  begin <- TRUE
+  
+  
+  # 开始游戏
+  counter <- 0
+  firstInfo <- playLetter()[1:2]
+  turn <- firstInfo[1]
+  letter <- firstInfo[2]
+  drawBoard(board)
+  cat("\n")
+  while (begin){
+    if (counter < 9){
+      counter <- counter + 1
+      cat(sprintf("请%s落子(1-9):", turn))
+      cat("\n")
+      move <- as.numeric(readline())
+      while (isSpaceExist(move) == FALSE){
+        cat(sprintf("%d位置不存在，请重新落子!", move))
+        cat("\n")
+        move <- as.numeric(readline())
+      }
+      while (isSpaceFree(move) == FALSE){
+        cat(sprintf("%d位置被占，请重新落子!", move))
+        cat("\n")
+        move <- as.numeric(readline())
+      }
+      board[move] <- letter
+      drawBoard(board)
+      if (isWin(board, letter)){
+        cat(sprintf("你(%s)获胜者了", turn))
+        cat("\n")
+        begin <- FALSE
+      }
+      turn <- setdiff(c("徐亮", "张莹"), turn)
+      letter <- setdiff(c("X", "O"), letter)
+    }else{
+      begin <- FALSE
+      cat("平局")
+      cat("\n")
+    }
+    if (begin == FALSE){
+      begin <- ifelse(playAgain() == "yes", TRUE, FALSE)
+      if (begin){
+        board <- vector("character", length = 9L)
+        board[1:9] <- " "
+        counter <- 0
+        firstInfo <- playLetter()[1:2]
+        turn <- firstInfo[1]
+        letter <- firstInfo[2]
+        drawBoard(board)
+        cat("\n")
+      }else{
+        cat("游戏结束")
+      }
