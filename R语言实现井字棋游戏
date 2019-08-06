@@ -4,7 +4,6 @@
 # 棋子，即可获胜，如果棋盘下满无人胜出，即为平局。
 
 ```R
-
 main <- function(){
   # 打印棋盘
   drawBoard <- function(board){
